@@ -1,0 +1,63 @@
+Bluetooth light communication scheme
+V2.0 - Nov 23 2018
+Keira Ryan
+ryanto166@gmail.com
+
+This describes how the code sent from the user to the Arduino's Blue Tooth device will be interpretted.
+
+Functionality goals:
+1 - Alarm clock feature.  Start a pattern based on time elapsed
+    Needs - Clock function - set base_time by code, set alarm_time by code, set color pattern for wakeup by code
+2 - Standard color mixing
+    Needs - basic colors
+3 - Advanced color mixing
+    Needs - predefined patterns sent by code
+
+
+19 digit code, no spaces
+S 010 020 030 030 020 010
+
+P - Pattern mode.  This displays alternating colors with a slow fade
+
+1st digit "P" sets the pattern mode
+	2nd digit = color 1 of light 1
+	3rd digit = color 2 of light19800000 1                                                                                                                                                                                                                                                            
+	4th digit = color 3 of light 1
+	5th digit = color 1 of light 2
+	6th digit = color 2 of light 2
+	7th digit = color 3 of light 2
+	Where the colors are listed as "1" for red, "2" for green, and "3" for blue, or "0" for nil.
+	8th digit through 19th are disregarded.
+	The number of colors mode is set by finding the first 0 in the pattern.  For the example of a 1 color mode, the 3rd digit will be 0.  
+	
+	For example, P 120 000 000 sets a 2 color pattern between red and green.  P BGR 000 000 sets a 3 color pattern from blue to green to red.
+	A code of P 0** *** *** will set it to a blank mode where no colors are patterned.  
+	
+S - Static color mode
+
+1st digit "S" sets the single color mode  (000 being off, 255 being completely on)
+	2nd - 4th digits   = color 1 value, light 1
+	5th - 7th digits   = color 2 value, light 1
+	8th - 10th digits  = color 3 value, light 1
+	11th - 13th digits = color 1 value, light 2
+	14th - 16th digits = color 2 value, light 2
+	17th - 19th digits = color 3 value, light 2
+	
+A - time management mode
+
+1st digit being 'A' means it will manipulate the time settings.
+    3nd digit - alarm on (1) or off (0)
+    4 - 8 digits - sets the current time of day
+    9 - 13 digits - sets the time of the alarm
+    14 - 18 digits - sets the duration of the alarm
+    
+B - setting alarm colors
+    2nd - 4th digits   = color 1 value, light 1
+	5th - 7th digits   = color 2 value, light 1
+	8th - 10th digits  = color 3 value, light 1
+	11th - 13th digits = color 1 value, light 2
+	14th - 16th digits = color 2 value, light 2
+	17th - 19th digits = color 3 value, light 2
+	
+
+1st digit being anything else will result in being cleared until a valid 1st digit is found.
